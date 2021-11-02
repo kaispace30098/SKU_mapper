@@ -1,0 +1,112 @@
+  '''''add two sheets, copy paste to the first sheet, and leave second sheet as blank and run the code at Sub callall()
+
+Sub del() '''''''''***Delete unnecessary items which are not in QBs
+
+
+LR = Sheet2.Cells(Rows.Count, "A").End(xlUp).Row 'find last row
+For i = LR To 2 Step -1
+
+    If InStr(Sheet2.Cells(i, "C"), "Ring") + InStr(Sheet2.Cells(i, "C"), "Pot") <> 0 Then
+            Sheet2.Rows(i).EntireRow.Delete
+        End If
+        
+Next i
+End Sub
+
+Sub SKUandQ() '''''''''***Unite the same items with same SKU, & multiply qty by any qty shown in the name's string
+
+ LastRow = Sheet2.Cells(Rows.Count, "a").End(xlUp).Row 'find last row
+    For i = LastRow To 2 Step -1 'loop thru backwards, finish at 2 for headers
+        
+        Select Case Sheet2.Cells(i, "C")
+            Case "GW22921"
+                Sheet2.Cells(i, "C") = "GW22921-S"
+            Case "A-1010503"
+                Sheet2.Cells(i, "C") = "1010503"
+                    
+            Case "A-F3528002-06"
+                Sheet2.Cells(i, "C") = "F3528002"
+                Sheet2.Cells(i, "B") = Sheet2.Cells(i, "B") * 6 'Multiple Quantity
+        
+       End Select
+    Next i
+End Sub
+
+Sub convert_bundle() '''***Use the thrid sheets(Sheet2) to add line for the extra bundle item, and paste it back to Sheet2
+    LastRow = Sheet2.Cells(Rows.Count, "a").End(xlUp).Row 'find last row
+    For i = LastRow To 2 Step -1 'loop thru backwards, finish at 2 for headers
+    
+        Select Case Sheet2.Cells(i, "C")
+            Case "N-GW22622+N-GWA0007"
+
+                Sheet2.Cells(i, "C") = "GW22622"
+                Sheet3.Cells(i, "A") = Sheet2.Cells(i, "A")
+                Sheet3.Cells(i, "B") = Sheet2.Cells(i, "B")
+                Sheet3.Cells(i, "C") = "GWA0007"
+                Sheet3.Cells(i, "D") = Sheet2.Cells(i, "D")
+                Sheet3.Cells(i, "E") = Sheet2.Cells(i, "E")
+                Sheet3.Cells(i, "F") = Sheet2.Cells(i, "F")
+                
+            Case "N-GW22633+N-GWA0007"
+
+
+                Sheet2.Cells(i, "C") = "GW22633"
+                Sheet3.Cells(i, "A") = Sheet2.Cells(i, "A")
+                Sheet3.Cells(i, "B") = Sheet2.Cells(i, "B")
+                Sheet3.Cells(i, "C") = "GWA0007"
+                Sheet3.Cells(i, "D") = Sheet2.Cells(i, "D")
+                Sheet3.Cells(i, "E") = Sheet2.Cells(i, "E")
+                Sheet3.Cells(i, "F") = Sheet2.Cells(i, "F")
+                
+          
+        End Select
+    Next i
+    
+    LR3 = Sheet3.Cells(Rows.Count, "A").End(xlUp).Row 'find last row
+        
+    For i = LR3 To 1 Step -1
+        If Sheet3.Cells(i, "b") = "" Then
+            Sheet3.Rows(i).EntireRow.Delete
+        End If
+    Next i
+    
+    LR3 = Sheet3.Cells(Rows.Count, "A").End(xlUp).Row 'find last row
+    
+    For k = 1 To LR3
+        Sheet2.Cells(LastRow + k, "A") = Sheet3.Cells(k, "A")
+        Sheet2.Cells(LastRow + k, "B") = Sheet3.Cells(k, "B")
+        Sheet2.Cells(LastRow + k, "C") = Sheet3.Cells(k, "c")
+        Sheet2.Cells(LastRow + k, "D") = Sheet3.Cells(k, "D")
+        Sheet2.Cells(LastRow + k, "E") = Sheet3.Cells(k, "E")
+        Sheet2.Cells(LastRow + k, "F") = Sheet3.Cells(k, "F")
+    Next k
+    
+    
+    
+    
+
+
+End Sub
+'If the company decide to change the name of the sku modify in the following
+Sub change_name()
+    For i = LR3 + LastRow To 2 Step -1
+        Select Case Sheet2.Cells(i, "c")
+            Case "GW44800-O"
+                Sheet2.Cells(i, "c") = "GW44800"
+            Case "RF-8201"
+                Sheet2.Cells(i, "c") = "RF8201"
+            Case "RF-9201"
+                Sheet2.Cells(i, "c") = "RF9201"
+        End Select
+    Next i
+        
+End Sub
+
+Sub callall()
+    'PLEASE MAKE SURE TO ADD TWO SHEETS BEFORE RUN THE CODE!!
+    del
+    SKUandQ
+    convert_bundle
+    
+End Sub
+
